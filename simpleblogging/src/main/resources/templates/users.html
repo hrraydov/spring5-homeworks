@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Users List')" />
+
+<body>
+    <div th:replace="fragments/menu :: menu(${path})" />
+    <div class="container">
+        <h3>Users</h3>
+        <a class="btn btn-primary" href="/users/user-form">Create new user</a>
+        <table class="user-table table table-striped">
+            <thead>
+                <th>Id</th>
+                <th>Email</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Active</th>
+                <th>Image</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <form method="post">
+                    <tr th:each="row, rowStat : ${users}">
+                        <td th:text="${row.id}"></td>
+                        <td th:text="${row.email}"></td>
+                        <td th:text="${row.firstName}"></td>
+                        <td th:text="${row.lastName}"></td>
+                        <td th:text="${row.active}"></td>
+                        <td>
+                            <img class="img-thumbnail" th:if="${row.imageUrl != null}" th:src="${'/uploads/' + row.imageUrl}">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" name="edit" th:value="${row.id}"><i class="fa fa-edit"></i></button>
+                            <button th:if="${row.id != #authentication.principal.id}" type="submit" class="btn btn-default" name="toggleActive" th:value="${row.id}"><i th:if="${row.active}" class="fa fa-lock"></i><i th:if="${not row.active}" class="fa fa-unlock"></i></button>
+                        </td>
+                    </tr>
+                </form>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/foot :: foot" />
+</body>
+
+</html>

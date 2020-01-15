@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('User form')" />
+
+<body>
+    <div th:replace="fragments/menu :: menu(${path})" />
+    <div class="container">
+        <h3 th:text="${title}">Add New Post</h3>
+        <form th:object="${user}" method="post" class="form-horizontal col-md-9 col-lg-6" enctype="multipart/form-data">
+            <div th:if="${user.id} != null" class="form-group row">
+                <label path="id" class="col-sm-2 col-form-label">ID</label>
+                <div class="col-sm-10">
+                    <input type="text" th:value="*{id}" id="id" name="id" class="form-control" title="User Id" readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label path="email" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" th:value="*{email}" id="email" name="email" class="form-control" title="Email">
+                </div>
+            </div>
+            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="errors alert alert-danger offset-sm-2 col-sm-10">
+                Incorrect email
+            </p>
+            <div class="form-group row">
+                <label path="id" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" th:value="*{password}" id="password" name="password" class="form-control" title="Password">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label path="title" class="col-sm-2 col-form-label">First name</label>
+                <div class="col-sm-10">
+                    <input type="text" th:value="*{firstName}" id="firstName" name="firstName" class="form-control" title="First name" th:errorclass="field-error">
+                </div>
+            </div>
+            <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="errors alert alert-danger offset-sm-2 col-sm-10">
+                Incorrect first name
+            </p>
+
+            <div class="form-group row">
+                <label path="text" class="col-sm-2 col-form-label">Last name</label>
+                <div class="col-sm-10">
+                    <input type="text" th:value="*{lastName}" id="lastName" name="lastName" class="form-control" title="Last name" th:errorclass="field-error">
+                </div>
+            </div>
+            <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="errors alert alert-danger offset-sm-2 col-sm-10">
+                Incorrect last name
+            </p>
+
+            <input type="hidden" th:value="*{imageUrl}" id="imageUrl" name="imageUrl" title="Image URL">
+            <input type="hidden" th:value="*{active}" id="active" name="active" title="Active">
+            <input th:if="${#authorization.expression('hasAuthority(''Blogger'')')}" type="hidden" th:value="*{role}" id="role" name="role" title="Role">
+
+            <div th:if="${#authorization.expression('hasAuthority(''Administrator'')')}" class="form-group row">
+                <label class="col-sm-2 col-form-label">Role</label>
+                <div class="col-sm-10">
+                    <select th:field="*{role}">
+                        <option th:value="'Administrator'" th:text="'Administrator'"></option>
+                        <option th:value="'Blogger'" th:text="'Blogger'"></option>
+                    </select>
+                </div>
+            </div>
+            <p th:if="${fileError!=null}" class="errors alert alert-danger offset-sm-2 col-sm-10 ">
+                <span th:text="${fileError} "></span>
+            </p>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label ">Image</label>
+                <div class="col-sm-10 ">
+                    <div class="custom-file ">
+                        <input type="file" id="file" name="file" class="custom-file-input" th:value="*{imageUrl} ">
+                        <label th:text="${#strings.isEmpty(user.imageUrl)}? 'Choose file' : *{imageUrl}" class="custom-file-label " for="file">Choose image file</label>
+                    </div>
+                </div>
+            </div>
+            <p th:if="${fileError!=null}" class="errors alert alert-danger offset-sm-2 col-sm-10 ">
+                <span th:text="${fileError}"></span>
+            </p>
+
+            <div class="form-group row ">
+                <div class="offset-sm-2 col-sm-10 ">
+                    <button type="submit" class="btn btn-primary" id="submit" name="submit" value="submit">Submit</button>
+                    <button type="reset" class="btn btn-danger">Reset</button>
+                    <a th:href="${'/users'}" class="btn btn-secondary" id="cancel ">Cancel</a>
+                </div>
+            </div>
+
+            <div class="col-xs-12 alert alert-danger" th:if="${myErrors!=null}">
+                <p>Validation errors: </p>
+                <ul th:each="error: ${myErrors}">
+                    <li th:text="${error}"></li>
+                </ul>
+            </div>
+        </form>
+        <div th:replace="fragments/foot :: foot" />
+    </div>
+
+</body>
+
+</html>

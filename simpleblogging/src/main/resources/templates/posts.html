@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Posts List')" />
+
+<body>
+    <div th:replace="fragments/menu :: menu(${path})" />
+    <div class="container">
+        <h3>Posts</h3>
+        <a class="btn btn-primary" href="/posts/post-form">Create new post</a>
+        <table class="post-table table table-striped">
+            <thead>
+                <th>Number</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Published On</th>
+                <th>Keywords</th>
+                <th>Image</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <form method="post">
+                    <tr th:each="row, rowStat : ${posts}">
+                        <td th:text="${rowStat.index + 1}"></td>
+                        <td th:text="${row.title}"></td>
+                        <td th:text="${row.createdBy}"></td>
+                        <td th:text="${row.publishedOn}"></td>
+                        <td th:text="${#strings.arrayJoin(row.keywords, ', ')}"></td>
+                        <td>
+                            <img width="150" class="img-thumbnail" th:if="${row.imageUrl != null}" th:src="${'/uploads/' + row.imageUrl}">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" name="edit" th:value="${row.id}"><i class="fa fa-edit"></i></button>
+                            <button type="submit" class="btn btn-danger" name="delete" th:value="${row.id}"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </form>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments/foot :: foot" />
+</body>
+
+</html>
